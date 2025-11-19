@@ -1,67 +1,86 @@
-package HomeBudget;
+package HomeBudget; //HomeBudget is where related classes are stored.
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class HouseFinance {
-    private double income;
-    private final List<ExpensesCategory> categories;
+    
+    private double income = 0;
+    public List<ExpensesCategories> expensesList = new ArrayList<>();
 
-    public HouseFinance() {
-        categories = new ArrayList<>();
+    public void setIncome(double income) {
+        this.income = income;
     }
 
-    // Here is the Encapsulation (getters and setters)
-    public double getIncome() { 
-        return income; }
-        
-        public void setIncome(double income) 
-        { this.income = income; }
-
-        public List<ExpensesCategory> getCategories() 
-        { return categories; }
-
-        // Here is the CRUD Functions
-        public void addCategory(ExpensesCategory category) 
-        { categories.add(category);
+    public double getIncome() {
+        return income;
     }
 
-    // This is for the Spending
-    public void updateSpending(String categoryName, double spent) {
-        for (ExpensesCategory category : categories) { // This will loop through the categories
-            if (category.getName().equalsIgnoreCase(categoryName)) {
-                category.setSpent(spent);
-                System.out.println(category.getReminder());
-                break;
-            }
+    public void addCategory(ExpensesCategories category) {
+        expensesList.add(category);
+    }
+
+    public void resetAll() {
+        income = 0;
+        expensesList.clear();
+    }
+
+    public double getTotalExpenses() {
+        double total = 0;
+        for (ExpensesCategories category : expensesList) {
+            total += category.getSpent();
         }
+        return total;
     }
 
-    // This is for the delete
-    public void deleteCategory(String categoryName) {
-        categories.removeIf(category -> category.getName().equalsIgnoreCase(categoryName));
+    public double getRemainingBalance() {
+        return income - getTotalExpenses();
     }
 
-    // This is the Breakdown of Expenses
+    // This is where the Expenses Breakdown happens.
     public void viewBreakdown() {
-        System.out.println("\n---- EXPENSES BREAKDOWN ----");
-        double TotalExpenses = 0;
-        for (ExpensesCategory category : categories) {
-            System.out.printf("%s: Spent ₱%.2f / Limit  ₱%.2f | Balance:  ₱%.2f\n",
-                    category.getName(),
-                    category.getSpent(),
-                    category.getLimit(),
-                    category.getBalance());
-                    TotalExpenses += category.getSpent();
-        }
-        System.out.printf("\nTotal Expenses:  ₱%.2f\n", TotalExpenses);
-        System.out.printf("Remaining Balance:  ₱%.2f\n", income - TotalExpenses);
+        System.out.println("=== EXPENSES BREAKDOWN ===");
         
-        if (TotalExpenses > income) {
-            System.out.println("Warning ⚠️: You're wallet is dry!");
+        // To check if the expenses list is empty then it will print the message.
+        if (expensesList.isEmpty() && income == 0) {
+            System.out.println("(No budget data yet.)");
+            return;
+        }
+        // If the expenses list is not empty then it will return the Spent, Limit, and Balance.
+        if (!expensesList.isEmpty()) {
+            for (ExpensesCategories category : expensesList) {
+                        System.out.printf("\n%s: Spent PHP%.2f | Limit PHP%.2f | Balance: PHP%.2f",
+                                category.getName(),
+                                category.getSpent(),
+                                category.getLimit(),
+                                category.getBalance());
+            }
+        } else {
+            System.out.println("No expense categories added yet.");
         }
 
-        System.out.println("\nMonthly Summary: ");
-        System.out.printf("This month you have spent ₱%.2f in %d categories.\n", TotalExpenses, categories.size());
+        System.out.println("");
+
+        System.out.printf("\nTotal Expenses: PHP%.2f", getTotalExpenses());
+        System.out.printf("\nRemaining Balance: PHP%.2f", getRemainingBalance());
+        System.out.println("");
+        if (getRemainingBalance() < 0) {
+            System.out.println("Warning: You have exceeded your budget!");
+        }
+    }
+
+    // If there is no budget data yet to delete.
+    public void delete() {
+        if (expensesList.isEmpty()) {
+            System.out.println("No budget data to delete.");
+        }
+    }
+    
+    // If there is no budget data yet to update.
+    public void update() {
+        if (expensesList.isEmpty()) {
+            System.out.println("No budget data to update.");
+        }
     }
 }
+
