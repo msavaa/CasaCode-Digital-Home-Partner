@@ -1,15 +1,15 @@
-package HomeBudget;
+package HomeBudget; //HomeBudget is where related classes are stored.
 
-public class Groceries extends ExpensesCategory {
+public class Groceries extends ExpensesCategories { // ExpensesCategories is the parent class. While the Groceries is the child class. 
     public Groceries(double limit) {
         super("Groceries", limit);
     }
 
-    // Polymorphism 
+    @Override
     public String getGroceriesReminder() {
-        if (isitWithinLimit()) 
+        if (isWithinLimit())
             return "Well done! Smart grocery shopping keeps your belly and wallet full!";
-        else 
+        else
             return "Wow, planning to feed a whole village? Maybe check your fridge first!";
     }
 }
