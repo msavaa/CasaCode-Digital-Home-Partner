@@ -71,16 +71,29 @@ public class RepairManager implements Manageable { // This manages a list of rep
             default -> "Other Room";
         };
 
-        System.out.print("What needs repair in the " + place + "? ");
-        String item = Input.SCANNER.nextLine();
+        String item;
+        while (true) {
+            System.out.print("\nWhat needs repair in the " + place + "? ");
+            item = Input.SCANNER.nextLine().trim();
 
-        if (item.isEmpty()) {
-            System.out.println("Error: Item cannot be empty. Cancelled.\n");
-            return;
+            if (item.isEmpty()) {
+                System.out.println("Error: Item cannot be empty. Try again.\n");
+                continue;
+            }
+
+            if (!item.matches("[A-Za-z ]+")) {
+                System.out.println("Error: Enter letters only. Try again.\n");
+                continue;
+            }
+
+            if (item.length() < 2) {
+                System.out.println("Error: Input too short. Enter a more specific item.\n");
+                continue;
+            }
+            break; // Input valid
         }
-
         repairs.add(new Repair(place, item));
-        System.out.println("Success: Added \"" + item + "\" in " + place + "\n");
+        System.out.println("Success: Repair added! [" + item + " in " + place + "]\n");
     }
 
     // view repairs
@@ -89,7 +102,7 @@ public class RepairManager implements Manageable { // This manages a list of rep
     System.out.println("\n=== PENDING REPAIRS ===");
     
     if (repairs.isEmpty()) {
-        System.out.println("No repairs scheduled yet. Your home is perfect!\n");
+        System.out.println("(No repairs scheduled yet. Your home is perfect!)\n");
     } else {
         System.out.println("Total repairs to do: " + repairs.size());
         System.out.println("---------------------------");
@@ -101,6 +114,7 @@ public class RepairManager implements Manageable { // This manages a list of rep
     }
 }
     // Update repair
+    // Update repair
     @Override
     public void update() { // Modify an existing repair.
         if (repairs.isEmpty()) { // If the list is empty it will print the message and then exits. 
@@ -109,51 +123,175 @@ public class RepairManager implements Manageable { // This manages a list of rep
         }
 
         view(); // Calling view to show the current entries.
-        System.out.print("Enter number to update: ");
-        int index = Input.SCANNER.nextInt() - 1;
-        Input.SCANNER.nextLine();
+        int index = -1;
+        while (true) {
+            System.out.print("Enter number to update (0 to cancel): ");
 
-        if (index < 0 || index >= repairs.size()) {
-            System.out.println("Error: Invalid number!\n");
-            return;
+            if (!Input.SCANNER.hasNextInt()) {
+                System.out.println("Error: Please enter a valid number!\n");
+                Input.SCANNER.nextLine();
+                continue;
+            }
+
+            index = Input.SCANNER.nextInt();
+            Input.SCANNER.nextLine();
+
+            if (index == 0) {
+                System.out.println("\nUpdate cancelled.\n");
+                return;
+            }
+            index--; // convert to 0-based index
+
+            if (index < 0 || index >= repairs.size()) {
+                System.out.println("Error: Invalid number! Try again.\n");
+                continue;
+            }
+            break;
         }
-
         Repair r = repairs.get(index);
 
-        System.out.print("New item name (blank = keep \"" + r.getItem() + "\"): ");
-        String newItem = Input.SCANNER.nextLine();
+        // ----- New Item (validate letters & length, allow blank to keep, allow cancel) -----
+        String newItem;
+        while (true) {
+            System.out.print("\nNew item name (blank = keep \"" + r.getItem() + "\"): ");
+            newItem = Input.SCANNER.nextLine().trim();
+
+            if (newItem.isEmpty()) {
+                // user chooses to keep current item
+                break;
+            }
+
+            if (!newItem.matches("[A-Za-z ]+")) {
+                System.out.println("Error: Enter letters and spaces only. Try again.");
+                System.out.print("\nRetry (Y) / Cancel update (C) / Keep current (K): ");
+                String opt = Input.SCANNER.nextLine().trim();
+                if (opt.equalsIgnoreCase("C")) {
+                    System.out.println("\nUpdate cancelled.\n");
+                    return;
+                } else if (opt.equalsIgnoreCase("K")) {
+                    newItem = ""; // treat as keep current
+                    break;
+                } else {
+                    // loop to retry
+                    continue;
+                }
+            }
+
+            if (newItem.length() < 2) {
+                System.out.println("Error: Input too short. Enter a more specific item.");
+                System.out.print("\nRetry (Y) / Cancel update (C) / Keep current (K): ");
+                String opt = Input.SCANNER.nextLine().trim();
+                if (opt.equalsIgnoreCase("C")) {
+                    System.out.println("\nUpdate cancelled.\n");
+                    return;
+                } else if (opt.equalsIgnoreCase("K")) {
+                    newItem = "";
+                    break;
+                } else {
+                    continue;
+                }
+            }
+            // valid newItem
+            break;
+        }
+
         if (!newItem.isEmpty()) {
-            r.setItem(newItem);  
+            r.setItem(newItem);
+        }
+        // ----- New Place (validate letters & length, allow blank to keep, allow cancel) -----
+        String newPlace;
+        while (true) {
+            System.out.print("\nNew location (blank = keep \"" + r.getPlace() + "\"): ");
+            newPlace = Input.SCANNER.nextLine().trim();
+
+            if (newPlace.isEmpty()) {
+                // keep current place
+                break;
+            }
+
+            if (!newPlace.matches("[A-Za-z ]+")) {
+                System.out.println("Error: Enter letters and spaces only. Try again.");
+                System.out.print("\nRetry (Y) / Cancel update (C) / Keep current (K): ");
+                String opt = Input.SCANNER.nextLine().trim();
+                if (opt.equalsIgnoreCase("C")) {
+                    System.out.println("\nUpdate cancelled.\n");
+                    return;
+                } else if (opt.equalsIgnoreCase("K")) {
+                    newPlace = "";
+                    break;
+                } else {
+                    continue;
+                }
+            }
+
+            if (newPlace.length() < 2) {
+                System.out.println("Error: Input too short. Enter a more specific location.");
+                System.out.print("\nRetry (Y) / Cancel update (C) / Keep current (K): ");
+                String opt = Input.SCANNER.nextLine().trim();
+                if (opt.equalsIgnoreCase("C")) {
+                    System.out.println("\nUpdate cancelled.\n");
+                    return;
+                } else if (opt.equalsIgnoreCase("K")) {
+                    newPlace = "";
+                    break;
+                } else {
+                    continue;
+                }
+            }
+            // valid newPlace
+            break;
         }
 
-        System.out.print("New location (blank = keep \"" + r.getPlace() + "\"): ");
-        String newPlace = Input.SCANNER.nextLine();
         if (!newPlace.isEmpty()) {
-            r.setPlace(newPlace);  
+            r.setPlace(newPlace);
         }
-
         System.out.println("Success: Repair updated!\n");
     }
 
+
+    // Delete repair
     // Delete repair
     @Override
-    public void delete() { // To remove a finished repair.
+    public void delete() {
         if (repairs.isEmpty()) {
-            System.out.println("No repairs to remove.\n");
+            System.out.println("No repairs to delete.\n");
             return;
         }
 
-        view();
-        System.out.print("Enter number of fixed repair to remove: ");
-        int index = Input.SCANNER.nextInt() - 1;
-
-        if (index >= 0 && index < repairs.size()) {
-            Repair removed = repairs.remove(index);
-            System.out.println("Success: Fixed & Removed → " + removed + "\n");
-        } else {
-            System.out.println("Error: Invalid number!\n");
+        // Show current list (like Update)
+        System.out.println("\n=== Repair Task ===");
+        System.out.println("Total Repairs: " + repairs.size());
+        System.out.println("---------------------------");
+        for (int i = 0; i < repairs.size(); i++) {
+            System.out.println((i + 1) + ".  " + repairs.get(i));
         }
-    }
+        System.out.println();
 
-    
+        int index = -1;
+        while (true) {
+            System.out.print("Enter number of fixed repair to remove: ");
+
+            if (!Input.SCANNER.hasNextInt()) {
+                System.out.println("Error: Please enter a valid number!\n");
+                Input.SCANNER.nextLine();
+                continue;
+            }
+            index = Input.SCANNER.nextInt() - 1;
+            Input.SCANNER.nextLine();
+
+            if (index < 0 || index >= repairs.size()) {
+                System.out.println("Error: Invalid number! Try again.\n");
+                continue;
+            }
+            break; // Valid input
+        }
+
+        // Remove the chosen repair and confirm success
+        Repair removed = repairs.remove(index);
+        System.out.println("Success! You fixed and removed: " + removed + "\n");
+    }
+    // Delete ALL repairs (used for Delete All option)
+    public void deleteAll() {
+        repairs.clear();
+    }
 }
