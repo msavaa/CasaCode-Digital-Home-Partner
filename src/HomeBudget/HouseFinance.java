@@ -39,7 +39,7 @@ public class HouseFinance {
 
     // This is where the Expenses Breakdown happens.
     public void viewBreakdown() {
-        System.out.println("=== EXPENSES BREAKDOWN ===");
+        System.out.println("\n=== EXPENSES BREAKDOWN ===");
         
         // To check if the expenses list is empty then it will print the message.
         if (expensesList.isEmpty() && income == 0) {
@@ -56,11 +56,9 @@ public class HouseFinance {
                                 category.getBalance());
             }
         } else {
-            System.out.println("No expense categories added yet.");
+            System.out.println("\nNo expense categories added yet.");
         }
-
-        System.out.println("");
-
+    
         System.out.printf("\nTotal Expenses: PHP%.2f", getTotalExpenses());
         System.out.printf("\nRemaining Balance: PHP%.2f", getRemainingBalance());
         System.out.println("");
@@ -72,15 +70,17 @@ public class HouseFinance {
     // If there is no budget data yet to delete.
     public void delete() {
         if (expensesList.isEmpty()) {
-            System.out.println("No budget data to delete.");
+            System.out.println("\nNo budget data to delete.");
         }
     }
-    
+    // Delete ALL budget data (used for Delete All option)
+    public void deleteAll() {
+        resetAll();
+    }
     // If there is no budget data yet to update.
     public void update() {
         if (expensesList.isEmpty()) {
-            System.out.println("No budget data to update.");
+            System.out.println("\nNo budget data to update.");
         }
     }
 }
-
