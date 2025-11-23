@@ -7,7 +7,7 @@ import java.util.List; // Using this to store chores, etc,.
 
 public class TaskChores implements Manageable { // Manages the chores and implements the Manageable method
 
-    private List<Chore> chores = new ArrayList<>(); // This stores all chores //Keyword "new" creates a new 'something'
+    private final List<Chore> chores = new ArrayList<>(); // This stores all chores //Keyword "new" creates a new 'something'
 
    
     private abstract static class Chore { // Base class for specific chores po ito
@@ -118,11 +118,11 @@ public class TaskChores implements Manageable { // Manages the chores and implem
             System.out.println("Invalid input. Please choose 1 for Daily or 2 for Weekly.");
         }
 
-        String name = readString("Enter chore name: ");
-        String person = readString("Assigned to: ");
+        String name = readValidName("Enter chore name: ");
+        String person = readValidPerson("Assigned to: ");
 
         if (type == 1) {
-            String time = readString("Time (e.g., 7:00 PM): ");
+            String time = readValidTime("Time (e.g., 7:00 PM): ");
             chores.add(new DailyChore(name, person, time));
         } else {
             int day;
@@ -143,7 +143,7 @@ public class TaskChores implements Manageable { // Manages the chores and implem
     public void view() { // To list all the chores.
         System.out.println("\n=== CHORES TO DO:  ===");
         if (chores.isEmpty()) {
-            System.out.println("No chores assigned. You're free today!\n");
+            System.out.println("(No chores assigned. You're free today!)\n");
             return;
         }
 
@@ -164,26 +164,44 @@ public class TaskChores implements Manageable { // Manages the chores and implem
         }
 
         view();
-        int index = readInt("Enter number to update (0 to cancel): ") - 1;
-        if (index < 0 || index >= chores.size()) {
-            System.out.println("Invalid selection.\n");
-            return;
-        }
+        
+        int index;
+
+        while (true) {
+            index = readInt("Enter number to update (0 to cancel): ") - 1;
+
+            if (index == -1) {
+                System.out.println("Update canceled.\n");
+                return;
+            }
+
+            if (index >= 0 && index < chores.size()) {
+                break; // valid selection
+            }
+
+            System.out.println("Invalid selection. Please choose a valid number.\n");
+            }
+
 
         Chore chore = chores.get(index);
 
-        String newName = readString("New name (Enter to keep): ");
+        String newName = readValidNameAllowEmpty("New name (Enter to keep): ");
         if (!newName.isBlank()) chore.setName(newName);
 
-        String newPerson = readString("New person (Enter to keep): ");
+        String newPerson = readValidPersonAllowEmpty("New person (Enter to keep): ");
         if (!newPerson.isBlank()) chore.setAssignedTo(newPerson);
 
-        if (chore instanceof DailyChore daily) {
-            String newTime = readString("New time (Enter to keep): ");
-            if (!newTime.isBlank()) daily.setTime(newTime);
-        } else if (chore instanceof WeeklyChore weekly) {
-            int newDay = readInt("New day (1-7, 0 to keep): ");
-            if (newDay >= 1 && newDay <= 7) weekly.setDayOfWeek(newDay);
+        switch (chore) {
+            case DailyChore daily -> {
+                String newTime = readValidTimeAllowEmpty("New time (Enter to keep): ");
+                if (!newTime.isBlank()) daily.setTime(newTime);
+            }
+            case WeeklyChore weekly -> {
+                int newDay = readInt("New day (1-7, 0 to keep): ");
+                if (newDay >= 1 && newDay <= 7) weekly.setDayOfWeek(newDay);
+            }
+            default -> {
+            }
         }
 
         System.out.println("Chore updated successfully!\n");
@@ -197,18 +215,30 @@ public class TaskChores implements Manageable { // Manages the chores and implem
         }
 
         view();
-        int index = readInt("Enter number to delete (0 to cancel): ") - 1;
-        if (index >= 0 && index < chores.size()) {
-            System.out.println("Deleted: " + chores.remove(index).getName() + "\n");
-        } else if (index != -1) {
-            System.out.println("Invalid number.\n");
+
+        int index;
+
+        while (true) {
+            index = readInt("Enter number to delete (0 to cancel): ") - 1;
+
+            if (index == -1) {
+                System.out.println("Delete canceled.\n");
+                return;
+            }
+
+            if (index >= 0 && index < chores.size()) {
+                break; // valid selection
+            }
+
+            System.out.println("Invalid number. Please choose a valid chore number.\n");
         }
+        String removed = chores.remove(index).getName();
+        System.out.println("Deleted: " + removed + "\n");
     }
 
-    
-    private String readString(String prompt) { // This prints the prompt.
-        System.out.print(prompt);
-        return Input.SCANNER.nextLine();
+    // Delete ALL chores (used for Delete All option)
+    public void deleteAll() {
+        chores.clear();
     }
 
     private int readInt(String prompt) { // This will loop until the user enters a valid number or integer.
@@ -221,6 +251,93 @@ public class TaskChores implements Manageable { // Manages the chores and implem
             }
             System.out.println("Error: Please enter a valid number.");
             Input.SCANNER.next(); 
+        }
+    }
+
+    private String readValidName(String prompt) {
+        while (true) {
+            System.out.print(prompt);
+            String input = Input.SCANNER.nextLine().trim();
+
+            if (input.matches("[A-Za-z ]{2,}")) {
+                return input;
+            }
+            System.out.println("Invalid name. Please enter correct chore name (no numbers or symbols).");
+        }
+    }
+
+    private String readValidPerson(String prompt) {
+        while (true) {
+            System.out.print(prompt);
+            String input = Input.SCANNER.nextLine().trim();
+
+            if (input.matches("[A-Za-z ]{2,}")) {
+                return input;
+            }
+            System.out.println("Invalid input. Assigned person should contain correct name and letters only.");
+        }
+    }
+
+    private String readValidTime(String prompt) {
+        while (true) {
+            System.out.print(prompt);
+            String input = Input.SCANNER.nextLine().trim();
+
+            if (input.matches("(?i)^([0-1]?\\d|2[0-3]):[0-5]\\d(\\s?(AM|PM))?$")) {
+                return input;
+            }
+            System.out.println("Invalid time format. Example: 7:00 PM or 19:30");
+        }
+    }
+
+    private String readValidNameAllowEmpty(String prompt) {
+        while (true) {
+            System.out.print(prompt);
+            String input = Input.SCANNER.nextLine().trim();
+
+            if (input.isBlank()) {
+                return ""; // signal to caller to keep old value
+            }
+
+            if (input.matches("[A-Za-z ]{2,}")) {
+                return input;
+            }
+
+            System.out.println("Invalid name. Please enter letters only (no numbers or symbols), or press Enter to keep the current name.");
+        }
+    }
+
+    private String readValidPersonAllowEmpty(String prompt) {
+        while (true) {
+            System.out.print(prompt);
+            String input = Input.SCANNER.nextLine().trim();
+
+            if (input.isBlank()) {
+                return "";
+            }
+
+            if (input.matches("[A-Za-z ]{2,}")) {
+                return input;
+            }
+
+            System.out.println("Invalid input. Assigned person should contain letters only, or press Enter to keep the current person.");
+        }
+    }
+
+    private String readValidTimeAllowEmpty(String prompt) {
+        while (true) {
+            System.out.print(prompt);
+            String input = Input.SCANNER.nextLine().trim();
+
+            if (input.isBlank()) {
+                return "";
+            }
+
+            if (input.matches("(?i)^([0-1]?\\d|2[0-3]):[0-5]\\d(\\s?(AM|PM))?$")) {
+                return input;
+            }
+
+            System.out.println("Invalid time format. Example: 7:00 PM or 19:30. Or press Enter to keep current time.");
         }
     }
 }
