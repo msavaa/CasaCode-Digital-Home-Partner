@@ -19,9 +19,8 @@ public class Main {
             "[2]. Repairs",
             "[3]. Budget",
             "[4]. View All",
-            "[5]. Update All",
-            "[6]. Delete All",
-            "[7]. Exit"
+            "[5]. Delete All",
+            "[6]. Exit"
     };
 
     // TASK CHORES MENU 
@@ -37,7 +36,7 @@ public class Main {
     private static final String[] REPAIRS_MENU = {
             "1. Add Repair Task",
             "2. View Repair Tasks",
-            "3. Update Repair Task",
+            "3. Update Repair Task", 
             "4. Delete Repair Task",
             "5. Back to Main Menu"
     };
@@ -75,11 +74,10 @@ public class Main {
                 case 2 -> repairs_menu();
                 case 3 -> budget_menu();
                 case 4 -> view_all();
-                case 5 -> updateAll();
-                case 6 -> deleteAll();
-                case 7 -> System.out.println("Exiting CasaCode...");
+                case 5 -> deleteAll();
+                case 6 -> System.out.println("\nExiting CasaCode...");
             }
-        } while (choice != 7);
+        } while (choice != 6);
     }
 
     // Task Chores Menu
@@ -87,7 +85,7 @@ public class Main {
         int choice;
 
         do {
-            System.out.println("\n=== Task Chores Menu ===");
+            System.out.println("\n=== TASK CHORES MENU ===");
             for (String option : TASKS_MENU) {
                 System.out.println(option);
             }
@@ -104,7 +102,7 @@ public class Main {
                 case 2 -> choreManager.view();
                 case 3 -> choreManager.update();
                 case 4 -> choreManager.delete();
-                case 5 -> System.out.println("Returning to Main Menu...");
+                case 5 -> System.out.println("\nReturning to Main Menu...");
             }
         } while (choice != 5);   
     }
@@ -114,7 +112,7 @@ public class Main {
         int choice;
 
         do {
-            System.out.println("\n=== Repairs Menu ===");
+            System.out.println("\n=== REPAIRS MENU ===");
             for (String option : REPAIRS_MENU) {
                 System.out.println(option);
             }
@@ -131,7 +129,7 @@ public class Main {
                 case 2 -> repairManager.view();
                 case 3 -> repairManager.update();
                 case 4 -> repairManager.delete();
-                case 5 -> System.out.println("Returning to Main Menu...");
+                case 5 -> System.out.println("\nReturning to Main Menu...");
             }
         } while (choice != 5);  
     }
@@ -141,7 +139,7 @@ public class Main {
         int choice;
 
         do {
-            System.out.println("\n=== Home Budget Menu ===");
+            System.out.println("\n=== HOME BUDGET MENU ===");
             for (String option : BUDGET_MENU) {
                 System.out.println(option);
             }
@@ -159,7 +157,7 @@ public class Main {
                     boolean validIncome = false;
                     
                     while (!validIncome) {
-                        System.out.print("Enter your monthly income: ");
+                        System.out.print("\nEnter your monthly income: ");
                         String incomeInput = scanner.nextLine();
                         try {
                             isValidIncome = Double.parseDouble(incomeInput.replace(",", ""));
@@ -246,15 +244,25 @@ public class Main {
                 }
 
                 case 4 -> {
-                    System.out.println("\n=== Monthly Summary ===");
+                    System.out.println("\n=== Monthly Summary ===\n");
                     
-                    System.out.printf("This month you have spent a total of PHP%.2f.\n",
-                            houseFinance.getTotalExpenses());
-            
-                    System.out.println("\n=== Expense Details ===");
+                    System.out.printf("Income: PHP %.2f\n", houseFinance.getIncome());
+                    System.out.printf("Total Expenses: PHP %.2f.\n", houseFinance.getTotalExpenses());
+                    System.out.printf("Remaining Balance: PHP %.2f\n", houseFinance.getRemainingBalance());
+                    
+                    if (houseFinance.getRemainingBalance() < 0) {
+                    System.out.println("Warning: You have exceeded your budget!");
+                    }
 
-                    for (ExpensesCategories category : houseFinance.expensesList) {
-                        System.out.println(category.getName() + ": " + category.getReminder());
+                    System.out.println("\n=== Expense Details ===");
+                    if (houseFinance.expensesList.isEmpty()) {
+                        System.out.println("(No expense categories have been added yet.)");
+                    } else {
+                        for (ExpensesCategories category : houseFinance.expensesList) {
+                            System.out.printf("- %s: %s\n",
+                                    category.getName(),
+                                    category.getReminder());
+                        }
                     }
                     break;
                 }
@@ -269,10 +277,10 @@ public class Main {
                     
                     if (resetChoice.equalsIgnoreCase("Y")) {
                         houseFinance.resetAll();
-                        System.out.println("Budget has been reset.");
+                        System.out.println("\nBudget has been reset.");
                         break;
                     } else if (resetChoice.equalsIgnoreCase("N")) {
-                        System.out.println("Reset cancelled.");
+                        System.out.println("\nReset cancelled.");
                         break;
                     } else {
                         System.out.println("Invalid input. Please try again and choose between Y/y and N/n as Yes or No.");
@@ -280,9 +288,9 @@ public class Main {
                 }
                 }
 
-                case 6 -> System.out.println("Returning to Main Menu...");
+                case 6 -> System.out.println("\nReturning to Main Menu...");
                 }
-                } while (choice != 5);  
+                } while (choice != 6);  
     }
     
     private static final TaskChores choreManager = new TaskChores();
@@ -292,33 +300,74 @@ public class Main {
     private static void view_all() {
         System.out.println("\n=== VIEW ALL DATA ===");
 
-        System.out.println("\nTask Chores: ");
+        System.out.println("\nTASK CHORES: ");
         choreManager.view();
 
-        System.out.println("\nRepairs:");
+        System.out.println("\nREPAIRS:");
         repairManager.view();
 
-        System.out.println("\nHome Budget:");
+        System.out.println("\nHOME BUDGET:");
         houseFinance.viewBreakdown();
     }
 
     private static void deleteAll() {
         System.out.println("\n=== DELETE ALL DATA ===");
 
-        choreManager.delete();   
-        repairManager.delete();  
-        houseFinance.delete();
+        System.out.println("""
+    What would you like to delete?
+    1. Task Chores only
+    2. Repairs only
+    3. Budget only
+    4. ALL (Chores + Repairs + Budget)
+    5. Cancel
+    """);
+
+        int choice = user_choiceInt("Enter your choice: ");
+
+        switch (choice) {
+            case 1 -> {
+                System.out.print("Are you sure you want to delete ALL Task Chores? (Y/N): ");
+                if (scanner.nextLine().trim().equalsIgnoreCase("Y")) {
+                    choreManager.deleteAll();
+                    System.out.println("\nAll Task Chores deleted!");
+                } else {
+                    System.out.println("\nCancelled.");
+                }
+            }
+            case 2 -> {
+                System.out.print("Are you sure you want to delete ALL Repairs? (Y/N): ");
+                if (scanner.nextLine().trim().equalsIgnoreCase("Y")) {
+                    repairManager.deleteAll();
+                    System.out.println("\nAll Repairs deleted!");
+                } else {
+                    System.out.println("\nCancelled.");
+                }
+            }
+            case 3 -> {
+                System.out.print("Are you sure you want to delete ALL Budget Data? (Y/N): ");
+                if (scanner.nextLine().trim().equalsIgnoreCase("Y")) {
+                    houseFinance.deleteAll();
+                    System.out.println("\nBudget reset and deleted!");
+                } else {
+                    System.out.println("\nCancelled.");
+                }
+            }
+            case 4 -> {
+                System.out.print("\nWARNING: This will delete EVERYTHING. Proceed? (Y/N): ");
+                if (scanner.nextLine().trim().equalsIgnoreCase("Y")) {
+                    choreManager.deleteAll();
+                    repairManager.deleteAll();
+                    houseFinance.deleteAll();
+                    System.out.println("All data deleted!");
+                } else {
+                    System.out.println("\nCancelled.");
+                }
+            }
+            case 5 -> System.out.println("\nDelete cancelled.");
+            default -> System.out.println("\nInvalid option.");
+        }
     }
 
-    private static void updateAll() {
-        System.out.println("\n=== UPDATE ALL DATA ===");
-
-        choreManager.update();   
-        repairManager.update(); 
-        houseFinance.update(); 
-    }
-
-    
     private static int user_choiceInt(String prompt) {
         int value = -1;
         boolean valid = false;
@@ -338,9 +387,5 @@ public class Main {
 
         return value; // return after loop ends
     }
-
-    public static TaskChores getChoreManager() {
-        return choreManager;
-    }
 }
-
+}
