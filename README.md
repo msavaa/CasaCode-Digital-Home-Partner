@@ -1,4 +1,5 @@
 DESCRIPTION 
+      
       Most households face increasing circumstances in managing daily responsibility due to busy schedules that lead for repairs to be delayed, often forgetting to do the chores, and to track the budget or expenses at home. With CasaCode: Digital Home Partner, this provides a home management system that is made to help users handle their daily household tasks in a smarter and more enjoyable way. Through this program, it lets users keep track of chores, manage their budget, and monitor home repairs—all in one organized system. The system supports full CRUD functions, allowing users to easily create, view, update, or delete records whenever needed. This will be developed using Object-Oriented Programming (OOP) principles like Encapsulation, Inheritance, Polymorphism, and Abstraction. It does not only demonstrate coding practices but also real-life functionality. To make things less boring, CasaCode includes fun reminders that humorously remind users to do or fix things around the house. Overall, it turns home management into something simple, efficient, and even a little entertaining.
 
 OOP CONCEPTS APPLIED
