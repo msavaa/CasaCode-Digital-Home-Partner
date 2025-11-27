@@ -44,10 +44,10 @@ While we have the HouseFinance that acts as the manager class and it stores the 
 
 5. HOMECOMMON
    - The HomeCommon package  contains the shared components used by all modules to maintain the reusability and standardized logic.
-MANAGEABLE.JAVA: 
-- An abstract interface that provides core CRUD operations such as add, view, update and delete.
-INPUT.JAVA: 
-- A class that centralizes the input handling that ensures the entire program uses the Scanner. This prevents errors caused by creating multiple scanners and provides a cleaner input-handling system.
+     MANAGEABLE.JAVA:
+      - An abstract interface that provides core CRUD operations such as add, view, update and delete.
+     INPUT.JAVA:
+      - A class that centralizes the input handling that ensures the entire program uses the Scanner. This prevents errors caused by creating multiple scanners and provides a cleaner input-handling system.
 
 HOW TO RUN THE PROGRAM
 - To run CasaCode: Digital Home Partner, do the following:
