@@ -29,7 +29,7 @@ The concept of Abstraction is applied through creating an interface class named 
 
 PROGRAM STRUCTURED
 
-1, MAIN CLASS: 
+1. MAIN CLASS: 
 The central controller of the program CasaCode that displays the system’s main menu and also handles the user’s navigation throughout the three modules: Task Chores, Home Repairs, and Home Budget. From this, the program takes the user’s input and runs a loop and uses switch cases, then guides them to the correct submenu. It also uses the shared Scanner from the Input class. Overall, the Main class is the command system that handles the input, menu display, and the method execution for all the other classes.
 
 2. HOMETASKS CLASS: 
@@ -43,7 +43,7 @@ The HomeBudget package is composed of several interconnected classes that work t
 While we have the HouseFinance that acts as the manager class and it stores the income values, handles multiple ExpensesCategories, computes the totals, and prints a complete budget breakdown. This also supports the deleting and resetting of all the budget data. Combining these, creates a flexible budgeting system that supports the category, the limits, expenses tracking and personalized financial reminder.
 
 5. HOMECOMMON
-The HomeCommon package  contains the shared components used by all modules to maintain the reusability and standardized logic.
+   - The HomeCommon package  contains the shared components used by all modules to maintain the reusability and standardized logic.
 MANAGEABLE.JAVA: 
 - An abstract interface that provides core CRUD operations such as add, view, update and delete.
 INPUT.JAVA: 
