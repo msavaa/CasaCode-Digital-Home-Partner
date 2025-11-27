@@ -5,7 +5,6 @@ import HomeCommon.Manageable; // Holds the add, view, update, and delete
 import java.util.ArrayList;
 import java.util.List; // Using this to store repairs, etc,.
 
-
 class Repair { // Stores details about what needs to repair.
     private String place;
     private String item;
