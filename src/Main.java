@@ -64,8 +64,8 @@ public class Main {
 
             choice = user_choiceInt("Enter your choice: ");
 
-            if (choice < 1 || choice > 7) {
-                System.out.println("Invalid choice. Please choose between 1 and 7.");
+            if (choice < 1 || choice > 6) {
+                System.out.println("Invalid choice. Please choose between 1 and 6.");
                 continue;
             }
 
