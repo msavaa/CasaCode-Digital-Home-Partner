@@ -123,7 +123,7 @@ ACKNOWLEDGEMENT
 
    First of all, the developers/programmers would like to give all the glory, honor and praise to our Almighty God for His faithfulness, guidance, wisdom and protection that He provided us throughout the journey of this project.
 
-   The programmers would like to share and express their greatest gratitude to their professor, Mr. Jayson for his willingness in teaching every lesson, wisdom that he shares and patience he has for his students. His dedication to finish the lessons in teaching the students, helped them to learn, improve and explore in creating a system through Java programming language.
+   The programmers would like to share and express their greatest gratitude to their professor, Mr. Jayson Abratique for his willingness in teaching every lesson, wisdom that he shares and patience he has for his students. His dedication to finish the lessons in teaching the students, helped them to learn, improve and explore in creating a system through Java programming language.
 
   To their parents, who have always supported them financially, emotionally and spiritually to accomplish this project. All their inspiring or encouraging messages everyday, helped them to keep going and pursuing the process in spite of everything with their guidance.
   
